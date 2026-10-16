@@ -60,18 +60,14 @@ export function WaterDropCursor({
   const isMouseDown = useRef(false);
 
   useEffect(() => {
-    const pointerQuery = window.matchMedia("(pointer: fine)");
-
     const checkDevice = () => {
-      setVisible(pointerQuery.matches && window.innerWidth >= 768);
+      setVisible(window.innerWidth >= 768);
     };
 
     checkDevice();
-    pointerQuery.addEventListener("change", checkDevice);
     window.addEventListener("resize", checkDevice);
 
     return () => {
-      pointerQuery.removeEventListener("change", checkDevice);
       window.removeEventListener("resize", checkDevice);
     };
   }, []);
@@ -182,14 +178,14 @@ export function WaterDropCursor({
   return (
     <>
       {hideSystemCursor && (
-        <style>{`
-  html.custom-cursor-active,
-  html.custom-cursor-active body,
-  html.custom-cursor-active body * {
-    cursor: none !important;
-  }
-`}</style>
-      )}
+  <style>{`
+    html.custom-cursor-active,
+    html.custom-cursor-active *,
+    html.custom-cursor-active body {
+      cursor: none !important;
+    }
+  `}</style>
+)}
 
       <motion.div
         style={{
