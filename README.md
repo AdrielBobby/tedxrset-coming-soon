@@ -22,3 +22,25 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## GitHub Pages Deployment
+
+This repository is configured to deploy directly using GitHub Pages' **Deploy from a branch** option:
+
+1. In your GitHub repository, navigate to **Settings** > **Pages**.
+2. Under **Build and deployment**:
+   - **Source**: Select `Deploy from a branch`
+   - **Branch**: Select `main`
+   - **Folder**: Select `/docs`
+   - Click **Save**.
+3. Your website will be live at `https://<your-username>.github.io/<repository-name>/`.
+
+### Updating the Static Build
+
+Whenever you make updates, run:
+
+```sh
+npm run build
+```
+
+This automatically recompiles all assets and refreshes the `/docs` folder for GitHub Pages.

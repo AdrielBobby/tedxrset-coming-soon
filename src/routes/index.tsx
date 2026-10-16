@@ -353,10 +353,10 @@ function Index() {
       <WaterDropCursor />
       <Toaster position="bottom-right" theme="dark" />
 
-      {/* Top Right Contact Navigation Button (Disappears at bottom, reappears at top) */}
+      {/* Top Right Contact Navigation Button (Appears only after countdown appears, disappears at bottom) */}
       <header
-        className={`fixed top-4 right-4 sm:top-6 sm:right-8 z-50 transition-all duration-300 ${
-          showContactButton
+        className={`fixed top-4 right-4 sm:top-6 sm:right-8 z-50 transition-all duration-500 ${
+          phase >= 7 && showContactButton
             ? "opacity-100 pointer-events-auto translate-y-0"
             : "opacity-0 pointer-events-none -translate-y-4"
         }`}
