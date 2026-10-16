@@ -4037,22 +4037,27 @@
   }
 }
 
-/* Custom TEDx cursor */
+/* TEDx Animated Cursor */
 @media (min-width: 768px) and (hover: hover) and (pointer: fine) {
   html.custom-cursor-active,
   html.custom-cursor-active * {
     cursor: none !important;
   }
+
+  #custom-cursor {
+    display: block;
+  }
 }
 
 #custom-cursor {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 28px;
-  height: 30px;
+  top: -100px;
+  left: -100px;
+  width: 26px;
+  height: 26px;
   z-index: 999999;
   pointer-events: none;
+  will-change: left, top, transform;
   transform: translate(-50%, -50%);
   display: none;
 }

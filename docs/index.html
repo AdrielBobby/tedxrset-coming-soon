@@ -804,47 +804,129 @@
       <span id="toast-msg">Copied to clipboard</span>
     </div>
 <!-- Custom Cursor -->
+
+<!-- TEDx Animated Cursor -->
 <div id="custom-cursor" aria-hidden="true">
-  <svg
-    width="28"
-    height="30"
-    viewBox="0 0 50 54"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="100%" height="100%"
+       viewBox="0 0 50 54" fill="none">
     <path
-      d="M5 3 L5 42 L16 31 L25 49 L33 45 L24 28 L41 27 Z"
-      fill="#eb0028"
-      stroke="#ffffff"
-      stroke-width="2"
-      stroke-linejoin="round"
+      d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z"
+      fill="var(--ted-red, #eb0028)"
+      style="filter: drop-shadow(0 0 8px rgba(235,0,40,.7))"
+    />
+    <path
+      d="M43.7146 40.6933L28.5431 6.34306C27.3556 3.65428 23.5772 3.69516 22.3668 6.32755L6.57226 40.6778C5.3134 43.4156 7.97238 46.298 10.803 45.2549L24.7662 40.109C25.0221 40.0147 25.2999 40.0156 25.5494 40.1082L39.4193 45.254C42.2261 46.2953 44.9254 43.4347 43.7146 40.6933Z"
+      stroke="var(--soft-red, #ff667a)"
+      stroke-width="2.25825"
     />
   </svg>
 </div>
+
     <!-- Client Runtime Script -->
     <script>
       (function () {
-        // Custom cursor
-const customCursor = document.getElementById("custom-cursor");
-const finePointer = window.matchMedia(
-  "(min-width: 768px) and (hover: hover) and (pointer: fine)"
-);
+    // TEDx Animated Cursor
+    const customCursor = document.getElementById("custom-cursor");
 
-function updateCursorMode() {
-  document.documentElement.classList.toggle(
-    "custom-cursor-active",
-    finePointer.matches
-  );
-}
+    const finePointer = window.matchMedia(
+      "(min-width: 768px) and (hover: hover) and (pointer: fine)"
+    );
 
-updateCursorMode();
-finePointer.addEventListener("change", updateCursorMode);
+    let targetX = -100;
+    let targetY = -100;
+    let currentX = -100;
+    let currentY = -100;
+    let rotation = 0;
+    let targetRotation = 0;
+    let scale = 1;
+    let targetScale = 1;
+    let previousX = null;
+    let previousY = null;
+    let animationFrame = null;
 
-window.addEventListener("pointermove", (event) => {
-  if (!finePointer.matches || event.pointerType !== "mouse") return;
+    function updateCursorMode() {
+      const active = finePointer.matches;
 
-  customCursor.style.left = `${event.clientX}px`;
-  customCursor.style.top = `${event.clientY}px`;
-});
+      document.documentElement.classList.toggle(
+        "custom-cursor-active",
+        active
+      );
+
+      customCursor.style.display = active ? "block" : "none";
+
+      if (!active && animationFrame !== null) {
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+      }
+
+      if (active && animationFrame === null) {
+        animationFrame = requestAnimationFrame(animateCursor);
+      }
+    }
+
+    function animateCursor() {
+      currentX += (targetX - currentX) * 0.28;
+      currentY += (targetY - currentY) * 0.28;
+
+      let angleDifference = targetRotation - rotation;
+
+      while (angleDifference > 180) angleDifference -= 360;
+      while (angleDifference < -180) angleDifference += 360;
+
+      rotation += angleDifference * 0.22;
+      scale += (targetScale - scale) * 0.3;
+
+      customCursor.style.left = `${currentX}px`;
+      customCursor.style.top = `${currentY}px`;
+      customCursor.style.transform =
+        `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
+
+      if (finePointer.matches) {
+        animationFrame = requestAnimationFrame(animateCursor);
+      } else {
+        animationFrame = null;
+      }
+    }
+
+    window.addEventListener("mousemove", (event) => {
+      if (!finePointer.matches) return;
+
+      targetX = event.clientX;
+      targetY = event.clientY;
+
+      if (previousX !== null && previousY !== null) {
+        const dx = targetX - previousX;
+        const dy = targetY - previousY;
+
+        if (Math.hypot(dx, dy) > 1) {
+          targetRotation = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+          targetScale = 0.95;
+        }
+      }
+
+      previousX = targetX;
+      previousY = targetY;
+
+      if (animationFrame === null) {
+        animationFrame = requestAnimationFrame(animateCursor);
+      }
+    });
+
+    window.addEventListener("mousedown", () => {
+      targetScale = 0.7;
+    });
+
+    window.addEventListener("mouseup", () => {
+      targetScale = 1;
+    });
+
+    window.addEventListener("blur", () => {
+      targetScale = 1;
+    });
+
+    finePointer.addEventListener("change", updateCursorMode);
+    updateCursorMode();
         const TARGET = new Date(2027, 0, 8, 0, 0, 0).getTime();
         let phase = 0;
         let showContactButton = true;
