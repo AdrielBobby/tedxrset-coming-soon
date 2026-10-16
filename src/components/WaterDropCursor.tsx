@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { motion, useSpring } from "framer-motion";
 
@@ -61,17 +60,20 @@ export function WaterDropCursor({
   const isMouseDown = useRef(false);
 
   useEffect(() => {
+    const pointerQuery = window.matchMedia("(pointer: fine)");
+
     const checkDevice = () => {
-      setVisible(
-        window.matchMedia("(pointer: fine)").matches &&
-          window.innerWidth >= 768
-      );
+      setVisible(pointerQuery.matches && window.innerWidth >= 768);
     };
 
     checkDevice();
+    pointerQuery.addEventListener("change", checkDevice);
     window.addEventListener("resize", checkDevice);
 
-    return () => window.removeEventListener("resize", checkDevice);
+    return () => {
+      pointerQuery.removeEventListener("change", checkDevice);
+      window.removeEventListener("resize", checkDevice);
+    };
   }, []);
 
   useEffect(() => {
@@ -107,8 +109,8 @@ export function WaterDropCursor({
           }
 
           if (!isMouseDown.current) {
-            scale.set(0.95);
-            scale.set(1);
+            scale.set(0.94);
+            requestAnimationFrame(() => scale.set(1));
           }
         }
       }
@@ -137,6 +139,11 @@ export function WaterDropCursor({
       if (enableClickEffect) scale.set(1);
     };
 
+    const onMouseLeave = () => {
+      lastMousePos.current = null;
+      previousAngle.current = null;
+    };
+
     if (hideSystemCursor) {
       document.documentElement.classList.add("custom-cursor-active");
     }
@@ -145,12 +152,14 @@ export function WaterDropCursor({
     window.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("blur", onMouseUp);
+    document.addEventListener("mouseleave", onMouseLeave);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("blur", onMouseUp);
+      document.removeEventListener("mouseleave", onMouseLeave);
 
       document.documentElement.classList.remove("custom-cursor-active");
 
