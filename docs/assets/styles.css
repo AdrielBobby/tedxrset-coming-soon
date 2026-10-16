@@ -4053,8 +4053,8 @@
   position: fixed;
   top: -100px;
   left: -100px;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   z-index: 999999;
   pointer-events: none;
   will-change: left, top, transform;
