@@ -34,10 +34,8 @@ if (fs.existsSync(path.join(outputPublicDir, "assets"))) {
   const cssFile = assetFiles.find((f) => f.endsWith(".css") && f.startsWith("styles"));
   if (cssFile) {
     cssFileName = cssFile;
-    fs.copyFileSync(
-      path.join(outputPublicDir, "assets", cssFile),
-      path.join(docsAssetsDir, "styles.css"),
-    );
+    const srcCss = path.join(outputPublicDir, "assets", cssFile);
+    fs.copyFileSync(srcCss, path.join(docsAssetsDir, "styles.css"));
   }
 }
 
@@ -527,5 +525,5 @@ fs.writeFileSync(path.join(docsDir, "index.html"), html);
 fs.writeFileSync(path.join(docsDir, "404.html"), html);
 
 console.log(
-  "[build-pages] Generated docs/index.html, docs/404.html, and assets successfully for GitHub Pages!",
+  "[build-pages] Generated docs/index.html, docs/404.html, and assets in /docs for GitHub Pages!",
 );

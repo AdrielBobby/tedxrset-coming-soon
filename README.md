@@ -1,46 +1,35 @@
-# Pixel Perfect Replica
+# TEDxRSET — Coming Soon
 
-Implement exactly the screenshot and nothing else
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/5e6f334d-8520-4b9b-b528-1f06ee615269).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Official countdown and teaser landing page for TEDxRSET at Rajagiri School of Engineering & Technology.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You need Node.js and npm:
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
 
 ## GitHub Pages Deployment
 
-This repository is configured to deploy directly using GitHub Pages' **Deploy from a branch** option:
+To publish this website using GitHub Pages:
 
-1. In your GitHub repository, navigate to **Settings** > **Pages**.
+1. In your GitHub repository, navigate to **Settings** > **Pages** (in the left sidebar).
 2. Under **Build and deployment**:
    - **Source**: Select `Deploy from a branch`
    - **Branch**: Select `main`
-   - **Folder**: Select `/docs`
+   - **Folder**: Select `/docs` ⚠️ _(Make sure to select `/docs`, not `/(root)`)_
    - Click **Save**.
-3. Your website will be live at `https://<your-username>.github.io/<repository-name>/`.
+3. GitHub Pages will publish the static site from the `/docs` folder within 1 minute at:
+   `https://<your-username>.github.io/<repository-name>/`
 
-### Updating the Static Build
+### Updating the Build
 
-Whenever you make updates, run:
+Whenever you make changes to the code, run:
 
 ```sh
 npm run build
 ```
 
-This automatically recompiles all assets and refreshes the `/docs` folder for GitHub Pages.
+This automatically compiles the project and refreshes the `/docs` directory for GitHub Pages.
