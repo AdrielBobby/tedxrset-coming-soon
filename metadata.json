@@ -1,0 +1,6 @@
+{
+  "name": "TEDxRSET — Coming Soon",
+  "description": "TEDxRSET event coming soon countdown and teaser landing page.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
