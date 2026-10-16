@@ -24,6 +24,7 @@ export function WaterDropCursor() {
   const acc = useRef(0);
   const down = useRef(false);
   const raf = useRef<number | null>(null);
+  const lastEvent = useRef<MouseEvent | null>(null);
 
   useEffect(() => {
     const check = () => setVisible(window.matchMedia("(pointer: fine)").matches && window.innerWidth >= 768);
@@ -34,24 +35,42 @@ export function WaterDropCursor() {
 
   useEffect(() => {
     if (!visible) return;
-    const move = (e: MouseEvent) => {
-      const now = Date.now(); const dt = now - last.current.t;
-      const vx = dt > 0 ? (e.clientX - last.current.x) / dt : 0;
-      const vy = dt > 0 ? (e.clientY - last.current.y) / dt : 0;
-      last.current = { x: e.clientX, y: e.clientY, t: now };
-      x.set(e.clientX); y.set(e.clientY);
-      if (Math.hypot(vx, vy) > 0.1) {
-        const a = Math.atan2(vy, vx) * (180 / Math.PI) + 90;
-        let d = a - prevAngle.current;
-        if (d > 180) d -= 360; if (d < -180) d += 360;
-        acc.current += d; rotation.set(acc.current); prevAngle.current = a;
-        if (!down.current) { scale.set(0.95); setTimeout(() => { if (!down.current) scale.set(1); }, 150); }
-      }
-    };
-    const onMove = (e: MouseEvent) => {
-      if (raf.current) return;
-      raf.current = requestAnimationFrame(() => { move(e); raf.current = null; });
-    };
+    
+const move = (e: MouseEvent) => {
+  const dx = e.clientX - last.current.x;
+  const dy = e.clientY - last.current.y;
+
+  last.current = { x: e.clientX, y: e.clientY, t: Date.now() };
+
+  x.set(e.clientX);
+  y.set(e.clientY);
+
+  if (Math.hypot(dx, dy) > 1) {
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    rotation.set(angle + 90);
+
+    if (!down.current) {
+      scale.set(0.95);
+      setTimeout(() => {
+        if (!down.current) scale.set(1);
+      }, 150);
+    }
+  }
+};
+    
+const onMove = (e: MouseEvent) => {
+  lastEvent.current = e;
+
+  if (raf.current !== null) return;
+
+  raf.current = requestAnimationFrame(() => {
+    if (lastEvent.current) {
+      move(lastEvent.current);
+    }
+    raf.current = null;
+  });
+};
+
     const md = () => { down.current = true; scale.set(0.7); };
     const mu = () => { down.current = false; scale.set(1); };
     window.addEventListener("mousemove", onMove);
