@@ -58,11 +58,7 @@ export function WaterDropCursor() {
       y.set(e.clientY);
       if (Math.hypot(vx, vy) > 0.1) {
         const a = Math.atan2(vy, vx) * (180 / Math.PI) + 90;
-        let d = a - prevAngle.current;
-        if (d > 180) d -= 360;
-        if (d < -180) d += 360;
-        acc.current += d;
-        rotation.set(acc.current);
+        rotation.set(a);
         prevAngle.current = a;
         if (!down.current) {
           scale.set(0.95);
@@ -103,7 +99,7 @@ export function WaterDropCursor() {
   if (!visible) return null;
   return (
     <>
-      <style>{`* { cursor: none !important; }`}</style>
+      <style>{`html, body, body * { cursor: none !important; }`}</style>
       <motion.div
         style={{
           position: "fixed",
