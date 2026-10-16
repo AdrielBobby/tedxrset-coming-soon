@@ -93,7 +93,7 @@ export function WaterDropCursor({
         const dy = y - previous.y;
 
         if (Math.hypot(dx, dy) > 0.5) {
-          const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+          const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
           if (previousAngle.current === null) {
             previousAngle.current = angle;
@@ -183,12 +183,12 @@ export function WaterDropCursor({
     <>
       {hideSystemCursor && (
         <style>{`
-          html.custom-cursor-active,
-          html.custom-cursor-active *,
-          html.custom-cursor-active body {
-            cursor: none !important;
-          }
-        `}</style>
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active body * {
+    cursor: none !important;
+  }
+`}</style>
       )}
 
       <motion.div
