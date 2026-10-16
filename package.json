@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build:cloudflare": "vite build",
-    "deploy": "npm run build:cloudflare && wrangler deploy"
+    "deploy": "npm run build:cloudflare && wrangler deploy",
+    "build:cloudflare": "vite build"
   },
   "overrides": {
     "rolldown": "1.2.1"
