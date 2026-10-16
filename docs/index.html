@@ -803,10 +803,48 @@
       </svg>
       <span id="toast-msg">Copied to clipboard</span>
     </div>
-
+<!-- Custom Cursor -->
+<div id="custom-cursor" aria-hidden="true">
+  <svg
+    width="28"
+    height="30"
+    viewBox="0 0 50 54"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M5 3 L5 42 L16 31 L25 49 L33 45 L24 28 L41 27 Z"
+      fill="#eb0028"
+      stroke="#ffffff"
+      stroke-width="2"
+      stroke-linejoin="round"
+    />
+  </svg>
+</div>
     <!-- Client Runtime Script -->
     <script>
       (function () {
+        // Custom cursor
+const customCursor = document.getElementById("custom-cursor");
+const finePointer = window.matchMedia(
+  "(min-width: 768px) and (hover: hover) and (pointer: fine)"
+);
+
+function updateCursorMode() {
+  document.documentElement.classList.toggle(
+    "custom-cursor-active",
+    finePointer.matches
+  );
+}
+
+updateCursorMode();
+finePointer.addEventListener("change", updateCursorMode);
+
+window.addEventListener("pointermove", (event) => {
+  if (!finePointer.matches || event.pointerType !== "mouse") return;
+
+  customCursor.style.left = `${event.clientX}px`;
+  customCursor.style.top = `${event.clientY}px`;
+});
         const TARGET = new Date(2027, 0, 8, 0, 0, 0).getTime();
         let phase = 0;
         let showContactButton = true;
