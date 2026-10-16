@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "tedxrset-coming-soon",
-  "main": "./src/server.ts",
+  "main": "@tanstack/react-start/server-entry",
   "compatibility_date": "2026-10-16",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
