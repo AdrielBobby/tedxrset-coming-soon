@@ -13,22 +13,16 @@ interface SmoothCursorProps {
   enableClickEffect?: boolean;
 }
 
-const DefaultCursorSVG = ({
+function DefaultCursorSVG({
   invertColors,
 }: {
   invertColors: boolean;
-}) => {
+}) {
   const innerColor = invertColors ? "white" : "var(--ted-red)";
   const outerColor = invertColors ? "black" : "var(--soft-red)";
 
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="100%"
-      height="100%"
-      viewBox="0 0 50 54"
-      fill="none"
-    >
+    <svg viewBox="0 0 50 54" width="100%" height="100%" fill="none">
       <path
         d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z"
         fill={innerColor}
@@ -36,11 +30,11 @@ const DefaultCursorSVG = ({
       <path
         d="M43.7146 40.6933L28.5431 6.34306C27.3556 3.65428 23.5772 3.69516 22.3668 6.32755L6.57226 40.6778C5.3134 43.4156 7.97238 46.298 10.803 45.2549L24.7662 40.109C25.0221 40.0147 25.2999 40.0156 25.5494 40.1082L39.4193 45.254C42.2261 46.2953 44.9254 43.4347 43.7146 40.6933Z"
         stroke={outerColor}
-        strokeWidth={2.25825}
+        strokeWidth="2.25825"
       />
     </svg>
   );
-};
+}
 
 export function WaterDropCursor({
   cursorSize = 40,
@@ -59,22 +53,19 @@ export function WaterDropCursor({
   const rotation = useSpring(0, { stiffness: 300, damping: 60 });
   const scale = useSpring(1, { stiffness: 500, damping: 35 });
 
-  const lastMousePos = useRef({ x: 0, y: 0 });
-  const lastUpdateTime = useRef(Date.now());
-  const previousAngle = useRef(0);
+  const lastMousePos = useRef<{ x: number; y: number } | null>(null);
+  const previousAngle = useRef<number | null>(null);
   const accumulatedRotation = useRef(0);
+  const latestPosition = useRef({ x: -100, y: -100 });
   const rafId = useRef<number | null>(null);
   const isMouseDown = useRef(false);
 
   useEffect(() => {
     const checkDevice = () => {
-      const isDesktop =
+      setVisible(
         window.matchMedia("(pointer: fine)").matches &&
-        window.innerWidth >= 768 &&
-        !("ontouchstart" in window) &&
-        navigator.maxTouchPoints === 0;
-
-      setVisible(isDesktop);
+          window.innerWidth >= 768
+      );
     };
 
     checkDevice();
@@ -86,58 +77,54 @@ export function WaterDropCursor({
   useEffect(() => {
     if (!visible) return;
 
-    const updateMouse = (e: MouseEvent) => {
-      const currentTime = Date.now();
-      const deltaTime = currentTime - lastUpdateTime.current;
+    const updateMouse = () => {
+      rafId.current = null;
 
-      const dx = e.clientX - lastMousePos.current.x;
-      const dy = e.clientY - lastMousePos.current.y;
+      const { x, y } = latestPosition.current;
+      const previous = lastMousePos.current;
 
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+      cursorX.set(x);
+      cursorY.set(y);
 
-      if (deltaTime > 0 && Math.hypot(dx, dy) > 0.5) {
-        const speed = Math.hypot(dx, dy) / deltaTime;
+      if (previous) {
+        const dx = x - previous.x;
+        const dy = y - previous.y;
 
-        if (speed > 0.1) {
-          const angle =
-            Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (Math.hypot(dx, dy) > 0.5) {
+          const angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
 
-          let angleDiff = angle - previousAngle.current;
+          if (previousAngle.current === null) {
+            previousAngle.current = angle;
+          } else {
+            let difference = angle - previousAngle.current;
 
-          if (angleDiff > 180) angleDiff -= 360;
-          if (angleDiff < -180) angleDiff += 360;
+            if (difference > 180) difference -= 360;
+            if (difference < -180) difference += 360;
 
-          accumulatedRotation.current += angleDiff;
-          rotation.set(accumulatedRotation.current);
-          previousAngle.current = angle;
+            accumulatedRotation.current += difference;
+            rotation.set(accumulatedRotation.current);
+            previousAngle.current = angle;
+          }
 
           if (!isMouseDown.current) {
             scale.set(0.95);
-
-            window.setTimeout(() => {
-              if (!isMouseDown.current) scale.set(1);
-            }, 150);
+            scale.set(1);
           }
         }
       }
 
-      lastMousePos.current = { x: e.clientX, y: e.clientY };
-      lastUpdateTime.current = currentTime;
+      lastMousePos.current = { x, y };
     };
 
-    const onMouseMove = (e: MouseEvent) => {
-      if (rafId.current !== null) return;
-
-      const latestEvent = {
-        clientX: e.clientX,
-        clientY: e.clientY,
+    const onMouseMove = (event: MouseEvent) => {
+      latestPosition.current = {
+        x: event.clientX,
+        y: event.clientY,
       };
 
-      rafId.current = requestAnimationFrame(() => {
-        updateMouse(latestEvent as MouseEvent);
-        rafId.current = null;
-      });
+      if (rafId.current === null) {
+        rafId.current = requestAnimationFrame(updateMouse);
+      }
     };
 
     const onMouseDown = () => {
@@ -151,7 +138,7 @@ export function WaterDropCursor({
     };
 
     if (hideSystemCursor) {
-      document.body.style.cursor = "none";
+      document.documentElement.classList.add("custom-cursor-active");
     }
 
     window.addEventListener("mousemove", onMouseMove);
@@ -165,7 +152,7 @@ export function WaterDropCursor({
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("blur", onMouseUp);
 
-      document.body.style.cursor = "";
+      document.documentElement.classList.remove("custom-cursor-active");
 
       if (rafId.current !== null) {
         cancelAnimationFrame(rafId.current);
@@ -186,15 +173,13 @@ export function WaterDropCursor({
   return (
     <>
       {hideSystemCursor && (
-        <style>
-          {`
-            html,
-            body,
-            body * {
-              cursor: none !important;
-            }
-          `}
-        </style>
+        <style>{`
+          html.custom-cursor-active,
+          html.custom-cursor-active *,
+          html.custom-cursor-active body {
+            cursor: none !important;
+          }
+        `}</style>
       )}
 
       <motion.div
