@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowDown, Check, Copy, ExternalLink, Linkedin, Mail } from "lucide-react";
+import { ArrowDown, Check, Copy, ExternalLink, Instagram, Linkedin, Mail } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { WaterDropCursor } from "@/components/WaterDropCursor";
 
@@ -353,6 +353,13 @@ function Index() {
       <WaterDropCursor />
       <Toaster position="bottom-right" theme="dark" />
 
+      {/* Unified Persistent Stage Background (Identical in main part & contact part) */}
+      <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+        <div className="stage-grid absolute inset-0" />
+        <div className="stage-spot absolute inset-0" />
+        <div className="stage-flare absolute inset-0" />
+      </div>
+
       {/* Top Right Contact Navigation Button (Appears only after countdown appears, disappears at bottom) */}
       <header
         className={`fixed top-4 right-4 sm:top-6 sm:right-8 z-50 transition-all duration-500 ${
@@ -373,10 +380,7 @@ function Index() {
       </header>
 
       {/* Hero Teaser Section */}
-      <section className="relative h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center">
-        <div className="stage-grid absolute inset-0" />
-        <div className="stage-spot absolute inset-0" />
-        <div className="stage-flare absolute inset-0" />
+      <section className="relative h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center z-10">
         <Particles />
 
         {/* Lockup */}
@@ -496,10 +500,8 @@ function Index() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="relative w-full min-h-[100svh] bg-black text-foreground border-t border-white/10 px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between overflow-hidden"
+        className="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between overflow-hidden z-10"
       >
-        <div className="stage-grid pointer-events-none absolute inset-0 opacity-30" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,oklch(0.58_0.24_22/0.14),transparent_70%)]" />
         {/* Floating TED X Particles in Contact Details section */}
         <Particles />
 
@@ -518,30 +520,31 @@ function Index() {
             </p>
           </div>
 
-          {/* Official General Mail Card */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          {/* Official Channels Grid (Email & Instagram) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Official Email Card */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-5">
               <div className="flex items-start sm:items-center gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--ted-red)]/15 border border-[var(--ted-red)]/30 text-[var(--ted-red)] shadow-[0_0_15px_rgba(235,0,40,0.25)]">
                   <Mail className="h-6 w-6" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
                     Official Email
                   </div>
                   <a
                     href="mailto:tedxrset@rajagiritech.edu.in"
-                    className="text-lg sm:text-xl font-bold text-[var(--ted-red)] hover:text-[var(--soft-red)] transition-colors break-all"
+                    className="text-base sm:text-lg font-bold text-[var(--ted-red)] hover:text-[var(--soft-red)] transition-colors break-all"
                   >
                     tedxrset@rajagiritech.edu.in
                   </a>
                 </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 pt-2 border-t border-white/5">
                 <button
                   type="button"
                   onClick={() => copyToClipboard("tedxrset@rajagiritech.edu.in", "Official email")}
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
                   aria-label="Copy official email"
                 >
                   {copiedEmail === "tedxrset@rajagiritech.edu.in" ? (
@@ -558,10 +561,67 @@ function Index() {
                 </button>
                 <a
                   href="mailto:tedxrset@rajagiritech.edu.in"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--ted-red)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 shadow-[0_0_15px_rgba(235,0,40,0.3)] transition-all cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--ted-red)] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 shadow-[0_0_15px_rgba(235,0,40,0.3)] transition-all cursor-pointer"
                 >
                   <span>Send Email</span>
                   <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Official Instagram Card */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-pink-500/50 transition-all duration-300 flex flex-col justify-between space-y-5">
+              <div className="flex items-start sm:items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.25)]">
+                  <Instagram className="h-6 w-6" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                    Official Instagram
+                  </div>
+                  <a
+                    href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base sm:text-lg font-bold text-pink-400 hover:text-pink-300 transition-colors truncate block"
+                  >
+                    @tedxrset
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                <button
+                  type="button"
+                  onClick={() =>
+                    copyToClipboard(
+                      "https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4",
+                      "Instagram link",
+                    )
+                  }
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
+                  aria-label="Copy Instagram link"
+                >
+                  {copiedEmail === "https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="text-emerald-400">Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>Copy Link</span>
+                    </>
+                  )}
+                </button>
+                <a
+                  href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer"
+                >
+                  <Instagram className="h-3.5 w-3.5 text-pink-300" />
+                  <span>Follow Us</span>
+                  <ExternalLink className="h-3 w-3 opacity-70" />
                 </a>
               </div>
             </div>
@@ -572,10 +632,7 @@ function Index() {
             {/* Organizer: Athul Raj */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--ted-red)]">
-                    Organizer
-                  </span>
+                <div className="flex items-center justify-end">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-sm font-black text-white">
                     AR
                   </div>
@@ -638,10 +695,7 @@ function Index() {
             {/* Co-organizer: Malavika D Nair */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--ted-red)]">
-                    Co-organizer
-                  </span>
+                <div className="flex items-center justify-end">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-sm font-black text-white">
                     MN
                   </div>
@@ -707,8 +761,31 @@ function Index() {
           {/* Section Footer */}
           <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-center sm:text-left text-xs text-muted-foreground">
-              ©️2026 TEDxRSET. This independent TEDx event is operated under license from TED.
+              Website Developed and Maintained by TEDXRSET Team
             </p>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <a
+                href="mailto:tedxrset@rajagiritech.edu.in"
+                className="flex items-center gap-1.5 hover:text-[var(--ted-red)] transition-colors"
+                title="Send Email"
+              >
+                <Mail className="h-3.5 w-3.5 text-[var(--ted-red)]" />
+                <span className="hidden sm:inline">tedxrset@rajagiritech.edu.in</span>
+                <span className="sm:hidden">Email</span>
+              </a>
+              <span className="text-white/20">·</span>
+              <a
+                href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-pink-400 transition-colors"
+                title="TEDxRSET Instagram"
+              >
+                <Instagram className="h-3.5 w-3.5 text-pink-400" />
+                <span>@tedxrset</span>
+                <ExternalLink className="h-3 w-3 opacity-60" />
+              </a>
+            </div>
           </div>
         </div>
       </section>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TEDxRSET — Coming Soon</title>
+    <meta name="description" content="TEDxRSET is coming. Ideas worth spreading — the countdown has begun." />
+    <meta property="og:title" content="TEDxRSET — Coming Soon" />
+    <meta property="og:description" content="Ideas worth spreading. The countdown to TEDxRSET has begun." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&display=swap" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='0,0 34,0 50,28 66,0 100,0 68,50 100,100 66,100 50,72 34,100 0,100 32,50' fill='%23EB0028'/%3E%3C/svg%3E" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./docs/assets/styles.css" />
+    <style>
+      html { scroll-behavior: smooth; }
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #18181b;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 26px;
+        height: 26px;
+        margin-left: -13px;
+        margin-top: -13px;
+        pointer-events: none;
+        z-index: 999999;
+        transform: translate(-100px, -100px);
+        transition: transform 0.05s ease-out;
+      }
+      @media (pointer: coarse), (max-width: 768px) {
+        .custom-cursor { display: none !important; }
+      }
+    </style>
+  </head>
+  <body class="bg-background text-foreground select-none overflow-x-hidden">
+    <!-- Unified Persistent Stage Background (Identical in main part & contact part) -->
+    <div class="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+      <div class="stage-grid absolute inset-0"></div>
+      <div class="stage-spot absolute inset-0"></div>
+      <div class="stage-flare absolute inset-0"></div>
+    </div>
+
+    <!-- Custom Water Drop Cursor -->
+    <div id="cursor" class="custom-cursor">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 50 54" fill="none" style="filter: drop-shadow(0 0 8px oklch(0.58 0.24 22 / .7))">
+        <path d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z" fill="var(--ted-red)" />
+        <path d="M43.7146 40.6933L28.5431 6.34306C27.3556 3.65428 23.5772 3.69516 22.3668 6.32755L6.57226 40.6778C5.3134 43.4156 7.97238 46.298 10.803 45.2549L24.7662 40.109C25.0221 40.0147 25.2999 40.0156 25.5494 40.1082L39.4193 45.254C42.2261 46.2953 44.9254 43.4347 43.7146 40.6933Z" stroke="var(--soft-red)" stroke-width="2.25825" />
+      </svg>
+    </div>
+
+    <!-- Top Right Contact Navigation Button -->
+    <header id="contact-btn-header" class="fixed top-4 right-4 sm:top-6 sm:right-8 z-50 transition-all duration-500 opacity-0 pointer-events-none -translate-y-4">
+      <button id="contact-btn" type="button" class="group flex items-center gap-2 rounded-full border border-white/20 bg-black/75 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ted-red)] shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-[var(--ted-red)] hover:bg-black/90 hover:shadow-[0_0_24px_rgba(235,0,40,0.45)] active:scale-95 cursor-pointer">
+        <span class="text-[var(--ted-red)]">Contact</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-[var(--ted-red)] transition-transform duration-300 group-hover:translate-y-0.5"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+      </button>
+    </header>
+
+    <!-- Hero Teaser Section -->
+    <section class="relative h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center z-10">
+      <div id="particles-hero" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
+
+      <!-- Lockup -->
+      <div id="lockup" class="lockup absolute left-1/2 top-[46%] flex items-end">
+        <svg id="tedx-svg" viewBox="0 0 310 110" class="tedx" aria-label="TEDx" overflow="visible">
+          <defs>
+            <clipPath id="tedclip">
+              <text x="0" y="100" font-size="130" textLength="258" lengthAdjust="spacingAndGlyphs" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800">TED</text>
+              <text x="264" y="46" font-size="78" textLength="40" lengthAdjust="spacingAndGlyphs" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800">x</text>
+            </clipPath>
+            <filter id="inkbleed" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="7"></feTurbulence>
+              <feDisplacementMap in="SourceGraphic" scale="14"></feDisplacementMap>
+              <feGaussianBlur stdDeviation="0.6"></feGaussianBlur>
+            </filter>
+          </defs>
+          <g clipPath="url(#tedclip)">
+            <g id="ink-group" filter="url(#inkbleed)" class="ink" fill="var(--ted-red)">
+              <circle cx="40" cy="60" r="90" style="transform-origin: 40px 60px; animation-delay: 0s;"></circle>
+              <circle cx="150" cy="40" r="90" style="transform-origin: 150px 40px; animation-delay: 0.25s;"></circle>
+              <circle cx="110" cy="95" r="90" style="transform-origin: 110px 95px; animation-delay: 0.12s;"></circle>
+              <circle cx="230" cy="70" r="90" style="transform-origin: 230px 70px; animation-delay: 0.4s;"></circle>
+              <circle cx="285" cy="30" r="90" style="transform-origin: 285px 30px; animation-delay: 0.55s;"></circle>
+              <circle cx="20" cy="20" r="90" style="transform-origin: 20px 20px; animation-delay: 0.5s;"></circle>
+              <circle cx="190" cy="10" r="90" style="transform-origin: 190px 10px; animation-delay: 0.3s;"></circle>
+            </g>
+          </g>
+          <g id="outline-group" class="outline-draw" fill="none" stroke="var(--ted-red)" stroke-width="1.6">
+            <text x="0" y="100" font-size="130" textLength="258" lengthAdjust="spacingAndGlyphs" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800">TED</text>
+            <text x="264" y="46" font-size="78" textLength="40" lengthAdjust="spacingAndGlyphs" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800">x</text>
+          </g>
+        </svg>
+        <svg viewBox="0 0 362 110" class="rset" aria-label="RSET" overflow="visible">
+          <text x="0" y="100" font-size="130" textLength="86" lengthAdjust="spacingAndGlyphs" fill="var(--rset-white)" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800" class="rset-l" style="transition-delay: 150ms;">R</text>
+          <text x="92" y="100" font-size="130" textLength="86" lengthAdjust="spacingAndGlyphs" fill="var(--rset-white)" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800" class="rset-l" style="transition-delay: 300ms;">S</text>
+          <text x="184" y="100" font-size="130" textLength="86" lengthAdjust="spacingAndGlyphs" fill="var(--rset-white)" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800" class="rset-l" style="transition-delay: 450ms;">E</text>
+          <text x="276" y="100" font-size="130" textLength="86" lengthAdjust="spacingAndGlyphs" fill="var(--rset-white)" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="800" class="rset-l" style="transition-delay: 600ms;">T</text>
+        </svg>
+      </div>
+
+      <!-- Coming Soon -->
+      <div class="absolute left-1/2 top-[54%] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-8 sm:gap-12">
+        <h1 id="coming-title" class="coming whitespace-nowrap text-[11vw] font-black uppercase leading-none tracking-tight sm:text-[8.5vw]">
+          Coming Soon
+        </h1>
+        <div id="countdown-wrapper" class="grid transition-[grid-template-rows] duration-1000 ease-[cubic-bezier(.65,0,.25,1)]" style="grid-template-rows: 0fr;">
+          <div class="overflow-hidden pb-4">
+            <div id="countdown-inner" class="transition-all delay-300 duration-1000 translate-y-3 opacity-0">
+              <div class="flex flex-col items-center gap-4">
+                <div class="flex gap-2 sm:gap-4">
+                  <div class="count-card flex w-[4.4rem] flex-col items-center rounded-xl px-2 py-3 sm:w-28 sm:py-5">
+                    <div id="cnt-days" class="count-num text-3xl font-extrabold tabular-nums leading-none sm:text-5xl">00</div>
+                    <div class="mt-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">Days</div>
+                  </div>
+                  <div class="count-card flex w-[4.4rem] flex-col items-center rounded-xl px-2 py-3 sm:w-28 sm:py-5">
+                    <div id="cnt-hours" class="count-num text-3xl font-extrabold tabular-nums leading-none sm:text-5xl">00</div>
+                    <div class="mt-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">Hours</div>
+                  </div>
+                  <div class="count-card flex w-[4.4rem] flex-col items-center rounded-xl px-2 py-3 sm:w-28 sm:py-5">
+                    <div id="cnt-minutes" class="count-num text-3xl font-extrabold tabular-nums leading-none sm:text-5xl">00</div>
+                    <div class="mt-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">Minutes</div>
+                  </div>
+                  <div class="count-card flex w-[4.4rem] flex-col items-center rounded-xl px-2 py-3 sm:w-28 sm:py-5">
+                    <div id="cnt-seconds" class="count-num text-3xl font-extrabold tabular-nums leading-none sm:text-5xl">00</div>
+                    <div class="mt-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground sm:text-xs">Seconds</div>
+                  </div>
+                </div>
+                <p class="text-sm font-semibold uppercase tracking-[0.35em] text-foreground sm:text-base">
+                  <span class="text-[color:var(--ted-red)]">●</span> January 8, 2027
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll down indicator button -->
+      <button id="hero-scroll-prompt" type="button" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 text-[11px] font-medium tracking-[0.25em] uppercase text-muted-foreground transition-all duration-500 hover:text-white cursor-pointer group pointer-events-auto opacity-0 translate-y-3">
+        <span class="group-hover:text-white transition-colors">Contact Details</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 animate-bounce text-[var(--ted-red)] group-hover:scale-110 transition-transform"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+      </button>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between overflow-hidden z-10">
+      <div id="particles-contact" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
+
+      <div class="relative z-10 mx-auto w-full max-w-4xl space-y-12">
+        <!-- Section Header -->
+        <div class="space-y-3 text-center sm:text-left">
+          <p class="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">Connect With Us · TEDxRSET</p>
+          <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white font-['Archivo',sans-serif]">Contact Details</h2>
+          <p class="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
+            For event inquiries, collaborations, speaking opportunities, or sponsorships, feel free to reach out to our organizing team.
+          </p>
+        </div>
+
+        <!-- Official Channels Grid (Email & Instagram) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Official Email Card -->
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-5">
+            <div class="flex items-start sm:items-center gap-4">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--ted-red)]/15 border border-[var(--ted-red)]/30 text-[var(--ted-red)] shadow-[0_0_15px_rgba(235,0,40,0.25)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+              </div>
+              <div class="min-w-0">
+                <div class="text-xs uppercase tracking-widest text-muted-foreground font-semibold">Official Email</div>
+                <a href="mailto:tedxrset@rajagiritech.edu.in" class="text-base sm:text-lg font-bold text-[var(--ted-red)] hover:text-[var(--soft-red)] transition-colors break-all">
+                  tedxrset@rajagiritech.edu.in
+                </a>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-2 border-t border-white/5">
+              <button type="button" onclick="copyEmail('tedxrset@rajagiritech.edu.in', 'Official email')" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer" aria-label="Copy official email">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                <span>Copy</span>
+              </button>
+              <a href="mailto:tedxrset@rajagiritech.edu.in" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--ted-red)] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 shadow-[0_0_15px_rgba(235,0,40,0.3)] transition-all cursor-pointer">
+                <span>Send Email</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Official Instagram Card -->
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-pink-500/50 transition-all duration-300 flex flex-col justify-between space-y-5">
+            <div class="flex items-start sm:items-center gap-4">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.25)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+              </div>
+              <div class="min-w-0">
+                <div class="text-xs uppercase tracking-widest text-muted-foreground font-semibold">Official Instagram</div>
+                <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="text-base sm:text-lg font-bold text-pink-400 hover:text-pink-300 transition-colors truncate block">
+                  @tedxrset
+                </a>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-2 border-t border-white/5">
+              <button type="button" onclick="copyEmail('https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4', 'Instagram link')" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer" aria-label="Copy Instagram link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                <span>Copy Link</span>
+              </button>
+              <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-pink-300"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                <span>Follow Us</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Organizers Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Organizer: Athul Raj -->
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-6">
+            <div class="space-y-4">
+              <div class="flex items-center justify-end">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-sm font-black text-white">AR</div>
+              </div>
+              <div>
+                <h3 class="text-2xl font-black text-white font-['Archivo',sans-serif]">Athul Raj</h3>
+              </div>
+
+              <div class="space-y-2 pt-2 border-t border-white/5">
+                <div class="text-[11px] uppercase tracking-wider text-muted-foreground">Email Address</div>
+                <div class="flex items-center justify-between gap-2 rounded-lg bg-black/40 border border-white/10 p-2.5">
+                  <a href="mailto:u2503280@rajagiri.edu.in" class="text-xs sm:text-sm font-mono font-semibold text-[var(--ted-red)] hover:underline transition-colors truncate">
+                    u2503280@rajagiri.edu.in
+                  </a>
+                  <button type="button" onclick="copyEmail('u2503280@rajagiri.edu.in', 'Athul\'s email')" class="p-1 rounded text-muted-foreground hover:text-white transition-colors cursor-pointer shrink-0" title="Copy email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+              <a href="mailto:u2503280@rajagiri.edu.in" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--ted-red)]/50 bg-[var(--ted-red)]/15 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--ted-red)] hover:bg-[var(--ted-red)] hover:text-white shadow-[0_0_15px_rgba(235,0,40,0.2)] transition-all cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                <span>Email</span>
+              </a>
+              <a href="https://www.linkedin.com/in/athul-raj-p-r-424035383?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-sky-300 hover:bg-sky-500/20 hover:border-sky-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)] transition-all cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                <span>LinkedIn</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Co-organizer: Malavika D Nair -->
+          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-6">
+            <div class="space-y-4">
+              <div class="flex items-center justify-end">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-sm font-black text-white">MN</div>
+              </div>
+              <div>
+                <h3 class="text-2xl font-black text-white font-['Archivo',sans-serif]">Malavika D Nair</h3>
+              </div>
+
+              <div class="space-y-2 pt-2 border-t border-white/5">
+                <div class="text-[11px] uppercase tracking-wider text-muted-foreground">Email Address</div>
+                <div class="flex items-center justify-between gap-2 rounded-lg bg-black/40 border border-white/10 p-2.5">
+                  <a href="mailto:u2401124@rajagiri.edu.in" class="text-xs sm:text-sm font-mono font-semibold text-[var(--ted-red)] hover:underline transition-colors truncate">
+                    u2401124@rajagiri.edu.in
+                  </a>
+                  <button type="button" onclick="copyEmail('u2401124@rajagiri.edu.in', 'Malavika\'s email')" class="p-1 rounded text-muted-foreground hover:text-white transition-colors cursor-pointer shrink-0" title="Copy email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+              <a href="mailto:u2401124@rajagiri.edu.in" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--ted-red)]/50 bg-[var(--ted-red)]/15 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--ted-red)] hover:bg-[var(--ted-red)] hover:text-white shadow-[0_0_15px_rgba(235,0,40,0.2)] transition-all cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+                <span>Email</span>
+              </a>
+              <a href="https://www.linkedin.com/in/malavika-d-nair-55944734a?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-sky-300 hover:bg-sky-500/20 hover:border-sky-500/50 shadow-[0_0_15px_rgba(14,165,233,0.15)] transition-all cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                <span>LinkedIn</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Footer -->
+        <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-center sm:text-left text-xs text-muted-foreground">
+            Website Developed and Maintained by TEDXRSET Team
+          </p>
+          <div class="flex items-center gap-4 text-xs text-muted-foreground">
+            <a href="mailto:tedxrset@rajagiritech.edu.in" class="flex items-center gap-1.5 hover:text-[var(--ted-red)] transition-colors" title="Send Email">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--ted-red)]"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+              <span class="hidden sm:inline">tedxrset@rajagiritech.edu.in</span>
+              <span class="sm:hidden">Email</span>
+            </a>
+            <span class="text-white/20">·</span>
+            <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 hover:text-pink-400 transition-colors" title="TEDxRSET Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-400"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+              <span>@tedxrset</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-60"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast element -->
+    <div id="toast" class="toast">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span id="toast-msg">Copied to clipboard</span>
+    </div>
+
+    <!-- TEDx Animated Cursor -->
+    <div id="custom-cursor" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 50 54" fill="none">
+        <path d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z" fill="var(--ted-red, #eb0028)" style="filter: drop-shadow(0 0 8px rgba(235,0,40,.7))" />
+        <path d="M43.7146 40.6933L28.5431 6.34306C27.3556 3.65428 23.5772 3.69516 22.3668 6.32755L6.57226 40.6778C5.3134 43.4156 7.97238 46.298 10.803 45.2549L24.7662 40.109C25.0221 40.0147 25.2999 40.0156 25.5494 40.1082L39.4193 45.254C42.2261 46.2953 44.9254 43.4347 43.7146 40.6933Z" stroke="var(--soft-red, #ff667a)" stroke-width="2.25825" />
+      </svg>
+    </div>
+
+    <!-- Client Runtime Script -->
+    <script>
+      (function() {
+        // TEDx Animated Cursor
+        const customCursor = document.getElementById("custom-cursor");
+        const finePointer = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
+        let targetX = -100, targetY = -100, currentX = -100, currentY = -100;
+        let rotation = 0, targetRotation = 0, scale = 1, targetScale = 1;
+        let previousX = null, previousY = null, animationFrame = null;
+
+        function updateCursorMode() {
+          const active = finePointer.matches;
+          document.documentElement.classList.toggle("custom-cursor-active", active);
+          if (customCursor) customCursor.style.display = active ? "block" : "none";
+          if (!active && animationFrame !== null) {
+            cancelAnimationFrame(animationFrame);
+            animationFrame = null;
+          }
+          if (active && animationFrame === null) {
+            animationFrame = requestAnimationFrame(animateCursor);
+          }
+        }
+
+        function animateCursor() {
+          currentX += (targetX - currentX) * 0.28;
+          currentY += (targetY - currentY) * 0.28;
+          let diff = targetRotation - rotation;
+          while (diff > 180) diff -= 360;
+          while (diff < -180) diff += 360;
+          rotation += diff * 0.22;
+          scale += (targetScale - scale) * 0.3;
+          if (customCursor) {
+            customCursor.style.left = currentX + "px";
+            customCursor.style.top = currentY + "px";
+            customCursor.style.transform = "translate(-50%, -50%) rotate(" + rotation + "deg) scale(" + scale + ")";
+          }
+          if (finePointer.matches) {
+            animationFrame = requestAnimationFrame(animateCursor);
+          } else {
+            animationFrame = null;
+          }
+        }
+
+        window.addEventListener("mousemove", (event) => {
+          if (!finePointer.matches) return;
+          targetX = event.clientX;
+          targetY = event.clientY;
+          if (previousX !== null && previousY !== null) {
+            const dx = targetX - previousX;
+            const dy = targetY - previousY;
+            if (Math.hypot(dx, dy) > 1) {
+              targetRotation = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+              targetScale = 0.95;
+            }
+          }
+          previousX = targetX;
+          previousY = targetY;
+          if (animationFrame === null) {
+            animationFrame = requestAnimationFrame(animateCursor);
+          }
+        });
+
+        window.addEventListener("mousedown", () => { targetScale = 0.7; });
+        window.addEventListener("mouseup", () => { targetScale = 1; });
+        window.addEventListener("blur", () => { targetScale = 1; });
+        finePointer.addEventListener("change", updateCursorMode);
+        updateCursorMode();
+        const TARGET = new Date(2027, 0, 8, 0, 0, 0).getTime();
+        let phase = 0;
+        let showContactButton = true;
+
+        // Elements
+        const header = document.getElementById("contact-btn-header");
+        const contactBtn = document.getElementById("contact-btn");
+        const heroScrollPrompt = document.getElementById("hero-scroll-prompt");
+        const outlineGroup = document.getElementById("outline-group");
+        const inkGroup = document.getElementById("ink-group");
+        const tedxSvg = document.getElementById("tedx-svg");
+        const rsetLetters = document.querySelectorAll(".rset-l");
+        const lockup = document.getElementById("lockup");
+        const comingTitle = document.getElementById("coming-title");
+        const countdownWrapper = document.getElementById("countdown-wrapper");
+        const countdownInner = document.getElementById("countdown-inner");
+        const toast = document.getElementById("toast");
+        const toastMsg = document.getElementById("toast-msg");
+        const cursor = document.getElementById("cursor");
+
+        function updateHeaderVisibility() {
+          if (phase >= 7 && showContactButton) {
+            header.classList.remove("opacity-0", "pointer-events-none", "-translate-y-4");
+            header.classList.add("opacity-100", "pointer-events-auto", "translate-y-0");
+          } else {
+            header.classList.remove("opacity-100", "pointer-events-auto", "translate-y-0");
+            header.classList.add("opacity-0", "pointer-events-none", "-translate-y-4");
+          }
+        }
+
+        // Scroll listener for contact section
+        window.addEventListener("scroll", function() {
+          const contactEl = document.getElementById("contact");
+          if (contactEl) {
+            const rect = contactEl.getBoundingClientRect();
+            showContactButton = rect.top > 200;
+          } else {
+            showContactButton = window.scrollY < window.innerHeight * 0.5;
+          }
+          updateHeaderVisibility();
+        }, { passive: true });
+
+        // Scroll actions
+        function scrollToContact() {
+          const el = document.getElementById("contact");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }
+        contactBtn.addEventListener("click", scrollToContact);
+        heroScrollPrompt.addEventListener("click", scrollToContact);
+
+        // Sound synthesizer
+        let actx = null;
+        function unlockAudio() {
+          if (!actx) {
+            try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+          }
+          if (actx && actx.state === "suspended") actx.resume();
+        }
+        window.addEventListener("pointerdown", unlockAudio, { once: true });
+        window.addEventListener("keydown", unlockAudio, { once: true });
+
+        // Timeline phases
+        const steps = [
+          [300, () => {
+            phase = 1;
+            outlineGroup.classList.add("go");
+          }],
+          [3500, () => {
+            phase = 2;
+            inkGroup.classList.add("go");
+          }],
+          [5400, () => {
+            phase = 3;
+            tedxSvg.classList.add("slid");
+            rsetLetters.forEach(el => el.classList.add("in"));
+          }],
+          [7400, () => {
+            phase = 4;
+            lockup.classList.add("is-top");
+          }],
+          [8400, () => {
+            phase = 5;
+            comingTitle.classList.add("show");
+          }],
+          [9300, () => { phase = 6; }],
+          [10000, () => {
+            phase = 7;
+            countdownWrapper.style.gridTemplateRows = "1fr";
+            countdownInner.classList.remove("translate-y-3", "opacity-0");
+            countdownInner.classList.add("translate-y-0", "opacity-100");
+            heroScrollPrompt.classList.remove("opacity-0", "translate-y-3");
+            heroScrollPrompt.classList.add("opacity-100", "translate-y-0");
+            updateHeaderVisibility();
+          }]
+        ];
+        steps.forEach(([t, fn]) => setTimeout(fn, t));
+
+        // Countdown timer
+        function updateTimer() {
+          const now = Date.now();
+          const diff = Math.max(0, TARGET - now);
+          const days = Math.floor(diff / 864e5);
+          const hours = Math.floor(diff / 36e5) % 24;
+          const mins = Math.floor(diff / 6e4) % 60;
+          const secs = Math.floor(diff / 1e3) % 60;
+
+          document.getElementById("cnt-days").textContent = String(days).padStart(2, "0");
+          document.getElementById("cnt-hours").textContent = String(hours).padStart(2, "0");
+          document.getElementById("cnt-minutes").textContent = String(mins).padStart(2, "0");
+          document.getElementById("cnt-seconds").textContent = String(secs).padStart(2, "0");
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // Particles
+        const X_POINTS = "0,0 34,0 50,28 66,0 100,0 68,50 100,100 66,100 50,72 34,100 0,100 32,50";
+        function createParticles(containerId, count) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+          const isMobile = window.innerWidth < 640;
+          const total = isMobile ? Math.floor(count * 0.6) : count;
+          for (let i = 0; i < total; i++) {
+            const r = Math.random();
+            const s = (isMobile ? 0.5 : 1) * (r < 0.08 ? 100 + Math.random() * 80 : r < 0.25 ? 88 + Math.random() * 72 : r < 0.6 ? 48 + Math.random() * 32 : 24 + Math.random() * 16);
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const solid = Math.random() < 0.5;
+            const dur = 18 + Math.random() * 22;
+            const delay = -Math.random() * 30;
+            const dx = (Math.random() - 0.5) * 160;
+            const dy = (Math.random() - 0.5) * 160;
+            const rot = (Math.random() - 0.5) * 120;
+            const opacity = r < 0.08 ? 0.08 + Math.random() * 0.08 : r < 0.25 ? 0.12 + Math.random() * 0.1 : 0.25 + Math.random() * 0.35;
+
+            const span = document.createElement("span");
+            span.className = "x-particle absolute block";
+            span.style.cssText = `left:${x}%; top:${y}%; width:${s * 0.72}px; height:${s * 0.72}px; opacity:${opacity}; animation-duration:${dur}s; animation-delay:${delay}s; --dx:${dx}px; --dy:${dy}px; --r:${rot}deg;`;
+            span.innerHTML = `<svg viewBox="0 0 100 100" class="h-full w-full" overflow="visible"><polygon points="${X_POINTS}" fill="${solid ? "var(--ted-red)" : "none"}" stroke="${solid ? "none" : "var(--ted-red)"}" stroke-width="1" vector-effect="non-scaling-stroke"></polygon></svg>`;
+            container.appendChild(span);
+          }
+        }
+        createParticles("particles-hero", 40);
+        createParticles("particles-contact", 35);
+
+
+        // Copy Email with Toast
+        let toastTimeout = null;
+        window.copyEmail = function(text, label) {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+              toastMsg.textContent = label + " copied to clipboard";
+              toast.classList.add("show");
+              clearTimeout(toastTimeout);
+              toastTimeout = setTimeout(() => toast.classList.remove("show"), 2500);
+            });
+          }
+        };
+      })();
+    </script>
+  </body>
+</html>
