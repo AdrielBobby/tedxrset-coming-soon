@@ -287,12 +287,12 @@ function Index() {
     window.addEventListener("keydown", unlock);
     const steps: [number, () => void][] = [
       [300, () => setPhase(1)],
-      [4000, () => setPhase(2)],
-      [5900, () => setPhase(3)],
-      [7900, () => setPhase(4)],
-      [8900, () => setPhase(5)],
-      [9800, () => setPhase(6)],
-      [10400, () => setPhase(7)],
+      [3500, () => setPhase(2)],
+      [5400, () => setPhase(3)],
+      [7400, () => setPhase(4)],
+      [8400, () => setPhase(5)],
+      [9300, () => setPhase(6)],
+      [10000, () => setPhase(7)],
     ];
     const ids = steps.map(([t, f]) => setTimeout(f, t));
     return () => {
