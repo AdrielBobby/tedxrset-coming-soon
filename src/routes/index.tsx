@@ -353,11 +353,12 @@ function Index() {
       <WaterDropCursor />
       <Toaster position="bottom-right" theme="dark" />
 
-      {/* Unified Persistent Stage Background (Identical in main part & contact part) */}
-      <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+      {/* Unified Persistent Stage Background (Single continuous bg for both parts) */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         <div className="stage-grid absolute inset-0" />
         <div className="stage-spot absolute inset-0" />
         <div className="stage-flare absolute inset-0" />
+        <Particles />
       </div>
 
       {/* Top Right Contact Navigation Button (Appears only after countdown appears, disappears at bottom) */}
@@ -380,9 +381,7 @@ function Index() {
       </header>
 
       {/* Hero Teaser Section */}
-      <section className="relative h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center z-10">
-        <Particles />
-
+      <section className="relative h-[100svh] w-full flex flex-col items-center justify-center z-10">
         {/* Lockup */}
         <div
           className={`lockup absolute left-1/2 top-[46%] flex items-end ${phase >= 4 ? "is-top" : ""}`}
@@ -500,23 +499,42 @@ function Index() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between overflow-hidden z-10"
+        className="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between z-10"
       >
-        {/* Floating TED X Particles in Contact Details section */}
-        <Particles />
-
         <div className="relative z-10 mx-auto w-full max-w-4xl space-y-12">
           {/* Section Header */}
           <div className="space-y-3 text-center sm:text-left">
-            <p className="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">
-              Connect With Us · TEDxRSET
-            </p>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+              <p className="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">
+                Connect With Us · TEDxRSET
+              </p>
+              <span className="hidden sm:inline text-white/20">·</span>
+              <a
+                href="https://www.ted.com/tedx/events/70800"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-semibold text-white/80 hover:border-[var(--ted-red)] hover:text-white transition-all cursor-pointer"
+                title="View on TED.com"
+              >
+                <span>Official TEDx Event</span>
+                <ExternalLink className="h-3 w-3 text-[var(--ted-red)]" />
+              </a>
+            </div>
             <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white font-['Archivo',sans-serif]">
               Contact Details
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
               For event inquiries, collaborations, speaking opportunities, or sponsorships, feel
-              free to reach out to our organizing team.
+              free to reach out to our organizing team. View our official event page on{" "}
+              <a
+                href="https://www.ted.com/tedx/events/70800"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--ted-red)] hover:underline inline-flex items-center gap-1 font-semibold"
+              >
+                TED.com <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+              .
             </p>
           </div>
 
@@ -569,7 +587,7 @@ function Index() {
               </div>
             </div>
 
-            {/* Official Instagram Card */}
+            {/* Official Instagram Card (No Copy Link button) */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-pink-500/50 transition-all duration-300 flex flex-col justify-between space-y-5">
               <div className="flex items-start sm:items-center gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.25)]">
@@ -589,39 +607,16 @@ function Index() {
                   </a>
                 </div>
               </div>
-              <div className="flex items-center gap-2 pt-2 border-t border-white/5">
-                <button
-                  type="button"
-                  onClick={() =>
-                    copyToClipboard(
-                      "https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4",
-                      "Instagram link",
-                    )
-                  }
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
-                  aria-label="Copy Instagram link"
-                >
-                  {copiedEmail === "https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>Copy Link</span>
-                    </>
-                  )}
-                </button>
+              <div className="pt-2 border-t border-white/5">
                 <a
                   href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer"
                 >
-                  <Instagram className="h-3.5 w-3.5 text-pink-300" />
-                  <span>Follow Us</span>
-                  <ExternalLink className="h-3 w-3 opacity-70" />
+                  <Instagram className="h-4 w-4 text-pink-300" />
+                  <span>Don't Forget to Follow Us</span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-70" />
                 </a>
               </div>
             </div>
@@ -775,15 +770,14 @@ function Index() {
               </a>
               <span className="text-white/20">·</span>
               <a
-                href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4"
+                href="https://www.ted.com/tedx/events/70800"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 hover:text-pink-400 transition-colors"
-                title="TEDxRSET Instagram"
+                className="flex items-center gap-1.5 hover:text-white transition-colors"
+                title="Official TEDx Event on TED.com"
               >
-                <Instagram className="h-3.5 w-3.5 text-pink-400" />
-                <span>@tedxrset</span>
-                <ExternalLink className="h-3 w-3 opacity-60" />
+                <span>Official TEDx Event</span>
+                <ExternalLink className="h-3 w-3 opacity-70" />
               </a>
             </div>
           </div>

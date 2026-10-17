@@ -106,11 +106,12 @@ const html = `<!DOCTYPE html>
     </style>
   </head>
   <body class="bg-background text-foreground select-none overflow-x-hidden">
-    <!-- Unified Persistent Stage Background (Identical in main part & contact part) -->
-    <div class="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+    <!-- Unified Persistent Stage Background (Single continuous bg for both parts) -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
       <div class="stage-grid absolute inset-0"></div>
       <div class="stage-spot absolute inset-0"></div>
       <div class="stage-flare absolute inset-0"></div>
+      <div id="particles-bg" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
     </div>
 
     <!-- Custom Water Drop Cursor -->
@@ -130,8 +131,7 @@ const html = `<!DOCTYPE html>
     </header>
 
     <!-- Hero Teaser Section -->
-    <section class="relative h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center z-10">
-      <div id="particles-hero" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
+    <section class="relative h-[100svh] w-full flex flex-col items-center justify-center z-10">
 
       <!-- Lockup -->
       <div id="lockup" class="lockup absolute left-1/2 top-[46%] flex items-end">
@@ -215,16 +215,21 @@ const html = `<!DOCTYPE html>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between overflow-hidden z-10">
-      <div id="particles-contact" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
-
+    <section id="contact" class="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between z-10">
       <div class="relative z-10 mx-auto w-full max-w-4xl space-y-12">
         <!-- Section Header -->
         <div class="space-y-3 text-center sm:text-left">
-          <p class="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">Connect With Us · TEDxRSET</p>
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+            <p class="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">Connect With Us · TEDxRSET</p>
+            <span class="hidden sm:inline text-white/20">·</span>
+            <a href="https://www.ted.com/tedx/events/70800" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-semibold text-white/80 hover:border-[var(--ted-red)] hover:text-white transition-all cursor-pointer" title="View on TED.com">
+              <span>Official TEDx Event</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--ted-red)]"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+            </a>
+          </div>
           <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white font-['Archivo',sans-serif]">Contact Details</h2>
           <p class="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            For event inquiries, collaborations, speaking opportunities, or sponsorships, feel free to reach out to our organizing team.
+            For event inquiries, collaborations, speaking opportunities, or sponsorships, feel free to reach out to our organizing team. View our official event page on <a href="https://www.ted.com/tedx/events/70800" target="_blank" rel="noopener noreferrer" class="text-[var(--ted-red)] hover:underline inline-flex items-center gap-1 font-semibold">TED.com <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg></a>.
           </p>
         </div>
 
@@ -255,7 +260,7 @@ const html = `<!DOCTYPE html>
             </div>
           </div>
 
-          <!-- Official Instagram Card -->
+          <!-- Official Instagram Card (No Copy Link button) -->
           <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-pink-500/50 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div class="flex items-start sm:items-center gap-4">
               <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.25)]">
@@ -268,15 +273,11 @@ const html = `<!DOCTYPE html>
                 </a>
               </div>
             </div>
-            <div class="flex items-center gap-2 pt-2 border-t border-white/5">
-              <button type="button" onclick="copyEmail('https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4', 'Instagram link')" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer" aria-label="Copy Instagram link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-                <span>Copy Link</span>
-              </button>
-              <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-pink-300"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-                <span>Follow Us</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+            <div class="pt-2 border-t border-white/5">
+              <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-300"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                <span>Don't Forget to Follow Us</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
               </a>
             </div>
           </div>
@@ -369,10 +370,9 @@ const html = `<!DOCTYPE html>
               <span class="sm:hidden">Email</span>
             </a>
             <span class="text-white/20">·</span>
-            <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 hover:text-pink-400 transition-colors" title="TEDxRSET Instagram">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-400"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-              <span>@tedxrset</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-60"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+            <a href="https://www.ted.com/tedx/events/70800" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 hover:text-white transition-colors" title="Official TEDx Event on TED.com">
+              <span>Official TEDx Event</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
             </a>
           </div>
         </div>
@@ -601,8 +601,7 @@ const html = `<!DOCTYPE html>
             container.appendChild(span);
           }
         }
-        createParticles("particles-hero", 40);
-        createParticles("particles-contact", 35);
+        createParticles("particles-bg", 45);
 
 
         // Copy Email with Toast
