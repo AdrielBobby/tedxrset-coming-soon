@@ -27,19 +27,15 @@ if (fs.existsSync(publicDir)) {
   }
 }
 
-// Find built CSS from dist/client/assets or .output/public/assets
-const possibleAssetDirs = [
-  path.join(rootDir, "dist", "client", "assets"),
-  path.join(outputPublicDir, "assets"),
-];
-for (const dir of possibleAssetDirs) {
-  if (fs.existsSync(dir)) {
-    const assetFiles = fs.readdirSync(dir);
-    const cssFile = assetFiles.find((f) => f.endsWith(".css") && f.startsWith("styles"));
-    if (cssFile) {
-      fs.copyFileSync(path.join(dir, cssFile), path.join(docsAssetsDir, "styles.css"));
-      break;
-    }
+// Find built CSS from .output/public/assets
+let cssFileName = "";
+if (fs.existsSync(path.join(outputPublicDir, "assets"))) {
+  const assetFiles = fs.readdirSync(path.join(outputPublicDir, "assets"));
+  const cssFile = assetFiles.find((f) => f.endsWith(".css") && f.startsWith("styles"));
+  if (cssFile) {
+    cssFileName = cssFile;
+    const srcCss = path.join(outputPublicDir, "assets", cssFile);
+    fs.copyFileSync(srcCss, path.join(docsAssetsDir, "styles.css"));
   }
 }
 
@@ -58,8 +54,7 @@ const html = `<!DOCTYPE html>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&display=swap" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='0,0 34,0 50,28 66,0 100,0 68,50 100,100 66,100 50,72 34,100 0,100 32,50' fill='%23EB0028'/%3E%3C/svg%3E" />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="./assets/styles.css" />
     <style>
       html { scroll-behavior: smooth; }
@@ -106,14 +101,6 @@ const html = `<!DOCTYPE html>
     </style>
   </head>
   <body class="bg-background text-foreground select-none overflow-x-hidden">
-    <!-- Unified Persistent Stage Background (Single continuous bg for both parts) -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-      <div class="stage-grid absolute inset-0"></div>
-      <div class="stage-spot absolute inset-0"></div>
-      <div class="stage-flare absolute inset-0"></div>
-      <div id="particles-bg" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
-    </div>
-
     <!-- Custom Water Drop Cursor -->
     <div id="cursor" class="custom-cursor">
       <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 50 54" fill="none" style="filter: drop-shadow(0 0 8px oklch(0.58 0.24 22 / .7))">
@@ -131,7 +118,11 @@ const html = `<!DOCTYPE html>
     </header>
 
     <!-- Hero Teaser Section -->
-    <section class="relative h-[100svh] w-full flex flex-col items-center justify-center z-10">
+    <section class="relative h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center">
+      <div class="stage-grid absolute inset-0"></div>
+      <div class="stage-spot absolute inset-0"></div>
+      <div class="stage-flare absolute inset-0"></div>
+      <div id="particles-hero" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
 
       <!-- Lockup -->
       <div id="lockup" class="lockup absolute left-1/2 top-[46%] flex items-end">
@@ -215,69 +206,43 @@ const html = `<!DOCTYPE html>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="relative w-full min-h-[100svh] text-foreground px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between z-10">
+    <section id="contact" class="relative w-full min-h-[100svh] bg-black text-foreground border-t border-white/10 px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col justify-between overflow-hidden">
+      <div class="stage-grid pointer-events-none absolute inset-0 opacity-30"></div>
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,oklch(0.58_0.24_22/0.14),transparent_70%)]"></div>
+      <div id="particles-contact" class="pointer-events-none absolute inset-0 overflow-hidden"></div>
+
       <div class="relative z-10 mx-auto w-full max-w-4xl space-y-12">
         <!-- Section Header -->
         <div class="space-y-3 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-            <p class="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">Connect With Us · TEDxRSET</p>
-            <span class="hidden sm:inline text-white/20">·</span>
-            <a href="https://www.ted.com/tedx/events/70800" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-semibold text-white/80 hover:border-[var(--ted-red)] hover:text-white transition-all cursor-pointer" title="View on TED.com">
-              <span>Official TEDx Event</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--ted-red)]"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-            </a>
-          </div>
+          <p class="text-xs uppercase tracking-[0.3em] font-bold text-[var(--ted-red)]">Connect With Us · TEDxRSET</p>
           <h2 class="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white font-['Archivo',sans-serif]">Contact Details</h2>
           <p class="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-            For event inquiries, collaborations, speaking opportunities, or sponsorships, feel free to reach out to our organizing team. View our official event page on <a href="https://www.ted.com/tedx/events/70800" target="_blank" rel="noopener noreferrer" class="text-[var(--ted-red)] hover:underline inline-flex items-center gap-1 font-semibold">TED.com <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg></a>.
+            For event inquiries, collaborations, speaking opportunities, or sponsorships, feel free to reach out to our organizing team.
           </p>
         </div>
 
-        <!-- Official Channels Grid (Email & Instagram) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Official Email Card -->
-          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-5">
+        <!-- Official General Mail Card -->
+        <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div class="flex items-start sm:items-center gap-4">
               <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--ted-red)]/15 border border-[var(--ted-red)]/30 text-[var(--ted-red)] shadow-[0_0_15px_rgba(235,0,40,0.25)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
               </div>
-              <div class="min-w-0">
+              <div>
                 <div class="text-xs uppercase tracking-widest text-muted-foreground font-semibold">Official Email</div>
-                <a href="mailto:tedxrset@rajagiritech.edu.in" class="text-base sm:text-lg font-bold text-[var(--ted-red)] hover:text-[var(--soft-red)] transition-colors break-all">
+                <a href="mailto:tedxrset@rajagiritech.edu.in" class="text-lg sm:text-xl font-bold text-[var(--ted-red)] hover:text-[var(--soft-red)] transition-colors break-all">
                   tedxrset@rajagiritech.edu.in
                 </a>
               </div>
             </div>
-            <div class="flex items-center gap-2 pt-2 border-t border-white/5">
-              <button type="button" onclick="copyEmail('tedxrset@rajagiritech.edu.in', 'Official email')" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer" aria-label="Copy official email">
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" onclick="copyEmail('tedxrset@rajagiritech.edu.in', 'Official email')" class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                 <span>Copy</span>
               </button>
-              <a href="mailto:tedxrset@rajagiritech.edu.in" class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--ted-red)] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 shadow-[0_0_15px_rgba(235,0,40,0.3)] transition-all cursor-pointer">
+              <a href="mailto:tedxrset@rajagiritech.edu.in" class="inline-flex items-center gap-2 rounded-lg bg-[var(--ted-red)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-red-700 shadow-[0_0_15px_rgba(235,0,40,0.3)] transition-all cursor-pointer">
                 <span>Send Email</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Official Instagram Card (No Copy Link button) -->
-          <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-pink-500/50 transition-all duration-300 flex flex-col justify-between space-y-5">
-            <div class="flex items-start sm:items-center gap-4">
-              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.25)]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-              </div>
-              <div class="min-w-0">
-                <div class="text-xs uppercase tracking-widest text-muted-foreground font-semibold">Official Instagram</div>
-                <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="text-base sm:text-lg font-bold text-pink-400 hover:text-pink-300 transition-colors truncate block">
-                  @tedxrset
-                </a>
-              </div>
-            </div>
-            <div class="pt-2 border-t border-white/5">
-              <a href="https://www.instagram.com/tedxrset?vrfl=dGIwZWs5NGlxbjU4" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-pink-500/40 bg-gradient-to-r from-pink-600/30 to-purple-600/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-pink-200 hover:from-pink-600/50 hover:to-purple-600/50 shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-300"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
-                <span>Don't Forget to Follow Us</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
               </a>
             </div>
           </div>
@@ -288,7 +253,8 @@ const html = `<!DOCTYPE html>
           <!-- Organizer: Athul Raj -->
           <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-6">
             <div class="space-y-4">
-              <div class="flex items-center justify-end">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-[var(--ted-red)]">Organizer</span>
                 <div class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-sm font-black text-white">AR</div>
               </div>
               <div>
@@ -324,7 +290,8 @@ const html = `<!DOCTYPE html>
           <!-- Co-organizer: Malavika D Nair -->
           <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 backdrop-blur-md shadow-2xl hover:border-[var(--ted-red)]/50 transition-all duration-300 flex flex-col justify-between space-y-6">
             <div class="space-y-4">
-              <div class="flex items-center justify-end">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-[var(--ted-red)]">Co-organizer</span>
                 <div class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-sm font-black text-white">MN</div>
               </div>
               <div>
@@ -361,20 +328,8 @@ const html = `<!DOCTYPE html>
         <!-- Section Footer -->
         <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p class="text-center sm:text-left text-xs text-muted-foreground">
-            Website Developed and Maintained by TEDXRSET Team
+            ©️2026 TEDxRSET. This independent TEDx event is operated under license from TED.
           </p>
-          <div class="flex items-center gap-4 text-xs text-muted-foreground">
-            <a href="mailto:tedxrset@rajagiritech.edu.in" class="flex items-center gap-1.5 hover:text-[var(--ted-red)] transition-colors" title="Send Email">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--ted-red)]"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
-              <span class="hidden sm:inline">tedxrset@rajagiritech.edu.in</span>
-              <span class="sm:hidden">Email</span>
-            </a>
-            <span class="text-white/20">·</span>
-            <a href="https://www.ted.com/tedx/events/70800" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 hover:text-white transition-colors" title="Official TEDx Event on TED.com">
-              <span>Official TEDx Event</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-70"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-            </a>
-          </div>
         </div>
       </div>
     </section>
@@ -385,81 +340,9 @@ const html = `<!DOCTYPE html>
       <span id="toast-msg">Copied to clipboard</span>
     </div>
 
-    <!-- TEDx Animated Cursor -->
-    <div id="custom-cursor" aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 50 54" fill="none">
-        <path d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z" fill="var(--ted-red, #eb0028)" style="filter: drop-shadow(0 0 8px rgba(235,0,40,.7))" />
-        <path d="M43.7146 40.6933L28.5431 6.34306C27.3556 3.65428 23.5772 3.69516 22.3668 6.32755L6.57226 40.6778C5.3134 43.4156 7.97238 46.298 10.803 45.2549L24.7662 40.109C25.0221 40.0147 25.2999 40.0156 25.5494 40.1082L39.4193 45.254C42.2261 46.2953 44.9254 43.4347 43.7146 40.6933Z" stroke="var(--soft-red, #ff667a)" stroke-width="2.25825" />
-      </svg>
-    </div>
-
     <!-- Client Runtime Script -->
     <script>
       (function() {
-        // TEDx Animated Cursor
-        const customCursor = document.getElementById("custom-cursor");
-        const finePointer = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
-        let targetX = -100, targetY = -100, currentX = -100, currentY = -100;
-        let rotation = 0, targetRotation = 0, scale = 1, targetScale = 1;
-        let previousX = null, previousY = null, animationFrame = null;
-
-        function updateCursorMode() {
-          const active = finePointer.matches;
-          document.documentElement.classList.toggle("custom-cursor-active", active);
-          if (customCursor) customCursor.style.display = active ? "block" : "none";
-          if (!active && animationFrame !== null) {
-            cancelAnimationFrame(animationFrame);
-            animationFrame = null;
-          }
-          if (active && animationFrame === null) {
-            animationFrame = requestAnimationFrame(animateCursor);
-          }
-        }
-
-        function animateCursor() {
-          currentX += (targetX - currentX) * 0.28;
-          currentY += (targetY - currentY) * 0.28;
-          let diff = targetRotation - rotation;
-          while (diff > 180) diff -= 360;
-          while (diff < -180) diff += 360;
-          rotation += diff * 0.22;
-          scale += (targetScale - scale) * 0.3;
-          if (customCursor) {
-            customCursor.style.left = currentX + "px";
-            customCursor.style.top = currentY + "px";
-            customCursor.style.transform = "translate(-50%, -50%) rotate(" + rotation + "deg) scale(" + scale + ")";
-          }
-          if (finePointer.matches) {
-            animationFrame = requestAnimationFrame(animateCursor);
-          } else {
-            animationFrame = null;
-          }
-        }
-
-        window.addEventListener("mousemove", (event) => {
-          if (!finePointer.matches) return;
-          targetX = event.clientX;
-          targetY = event.clientY;
-          if (previousX !== null && previousY !== null) {
-            const dx = targetX - previousX;
-            const dy = targetY - previousY;
-            if (Math.hypot(dx, dy) > 1) {
-              targetRotation = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-              targetScale = 0.95;
-            }
-          }
-          previousX = targetX;
-          previousY = targetY;
-          if (animationFrame === null) {
-            animationFrame = requestAnimationFrame(animateCursor);
-          }
-        });
-
-        window.addEventListener("mousedown", () => { targetScale = 0.7; });
-        window.addEventListener("mouseup", () => { targetScale = 1; });
-        window.addEventListener("blur", () => { targetScale = 1; });
-        finePointer.addEventListener("change", updateCursorMode);
-        updateCursorMode();
         const TARGET = new Date(2027, 0, 8, 0, 0, 0).getTime();
         let phase = 0;
         let showContactButton = true;
@@ -527,25 +410,25 @@ const html = `<!DOCTYPE html>
             phase = 1;
             outlineGroup.classList.add("go");
           }],
-          [3500, () => {
+          [4000, () => {
             phase = 2;
             inkGroup.classList.add("go");
           }],
-          [5400, () => {
+          [5900, () => {
             phase = 3;
             tedxSvg.classList.add("slid");
             rsetLetters.forEach(el => el.classList.add("in"));
           }],
-          [7400, () => {
+          [7900, () => {
             phase = 4;
             lockup.classList.add("is-top");
           }],
-          [8400, () => {
+          [8900, () => {
             phase = 5;
             comingTitle.classList.add("show");
           }],
-          [9300, () => { phase = 6; }],
-          [10000, () => {
+          [9800, () => { phase = 6; }],
+          [10400, () => {
             phase = 7;
             countdownWrapper.style.gridTemplateRows = "1fr";
             countdownInner.classList.remove("translate-y-3", "opacity-0");
@@ -601,8 +484,24 @@ const html = `<!DOCTYPE html>
             container.appendChild(span);
           }
         }
-        createParticles("particles-bg", 45);
+        createParticles("particles-hero", 40);
+        createParticles("particles-contact", 35);
 
+        // Water Drop Cursor
+        if (window.matchMedia("(pointer: fine)").matches && window.innerWidth >= 768 && cursor) {
+          let mouseX = -100, mouseY = -100, curX = -100, curY = -100;
+          window.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+          });
+          function animCursor() {
+            curX += (mouseX - curX) * 0.35;
+            curY += (mouseY - curY) * 0.35;
+            cursor.style.transform = \`translate(\${curX}px, \${curY}px)\`;
+            requestAnimationFrame(animCursor);
+          }
+          requestAnimationFrame(animCursor);
+        }
 
         // Copy Email with Toast
         let toastTimeout = null;
@@ -625,11 +524,6 @@ const html = `<!DOCTYPE html>
 fs.writeFileSync(path.join(docsDir, "index.html"), html);
 fs.writeFileSync(path.join(docsDir, "404.html"), html);
 
-// Also generate root index.html and 404.html for GitHub Pages "/ (root)" deployment option
-const rootHtml = html.replace(/\.\/assets\//g, "./docs/assets/");
-fs.writeFileSync(path.join(rootDir, "index.html"), rootHtml);
-fs.writeFileSync(path.join(rootDir, "404.html"), rootHtml);
-
 console.log(
-  "[build-pages] Generated docs/index.html, docs/404.html, and root index.html for GitHub Pages!",
+  "[build-pages] Generated docs/index.html, docs/404.html, and assets in /docs for GitHub Pages!",
 );
