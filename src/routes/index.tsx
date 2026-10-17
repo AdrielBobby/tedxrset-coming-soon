@@ -756,7 +756,7 @@ function Index() {
           {/* Section Footer */}
           <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-center sm:text-left text-xs text-muted-foreground">
-              Website Developed and Maintained by TEDXRSET Team
+              ©️2026 TEDxRSET. This independent TEDx event is operated under license from TED.
             </p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <a
