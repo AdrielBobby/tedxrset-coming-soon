@@ -328,7 +328,7 @@ const html = `<!DOCTYPE html>
         <!-- Section Footer -->
         <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p class="text-center sm:text-left text-xs text-muted-foreground">
-            Website Developed and Maintained by TEDXRSET Team
+            ©️2026 TEDxRSET. This independent TEDx event is operated under license from TED.
           </p>
         </div>
       </div>

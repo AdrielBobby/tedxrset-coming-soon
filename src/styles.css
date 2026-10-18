@@ -63,7 +63,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.185 0.003 25);
+  --background: oklch(0.08 0 0);
   --foreground: oklch(0.98 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
@@ -74,7 +74,7 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.77 0.003 20);
+  --muted-foreground: oklch(0.65 0 0);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -147,94 +147,55 @@
   }
 }
 
-/* ---------- TEDxRSET design tokens ---------- */
 :root {
-  --ted-red: #eb0028; /* TED's brand red */
-  --rset-white: #fff;
-  --ink-2: #1f1e1e;
-  --line: rgb(255 255 255 / 0.14);
-  --font-display: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ted-red: oklch(0.58 0.24 22);
+  --rset-white: oklch(1 0 0);
+  --soft-red: oklch(0.74 0.15 15);
 }
-body {
-  font-family: var(--font-display);
-  -webkit-font-smoothing: antialiased;
+.stage-grid {
+  background-image:
+    linear-gradient(to right, oklch(0.58 0.24 22 / 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.58 0.24 22 / 0.22) 1px, transparent 1px);
+  background-size: 54px 54px;
+  background-position: center;
+  mask-image: radial-gradient(ellipse at center, #000 60%, rgba(0, 0, 0, 0.55) 100%);
 }
-.mono {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.stage-spot {
+  background: radial-gradient(
+    ellipse 45% 40% at 50% 48%,
+    oklch(0.58 0.24 22 / 0.18),
+    transparent 70%
+  );
 }
-.display {
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.95;
+.stage-flare {
+  background: radial-gradient(circle at 92% 6%, oklch(0.58 0.24 22 / 0.14), transparent 35%);
 }
-.link-underline {
-  text-decoration: underline;
-  text-decoration-color: var(--ted-red);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-}
-:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-  box-shadow: 0 0 0 5px var(--ted-red);
-}
-
-/* ---------- Hero background: slow gradient mesh (sits behind the headline, never the logo) ---------- */
-.mesh {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1.6s ease;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 24%, #000 58%);
-  mask-image: linear-gradient(to bottom, transparent 0, transparent 24%, #000 58%);
-}
-.mesh.on {
-  opacity: 1;
-}
-.mesh i {
-  position: absolute;
-  width: 70vmax;
-  height: 70vmax;
-  border-radius: 50%;
+.x-particle {
+  animation: drift linear infinite alternate;
   will-change: transform;
-  animation: mesh-drift 26s ease-in-out infinite alternate;
 }
-.mesh i:nth-child(1) {
-  left: -20vmax;
-  bottom: -38vmax;
-  background: radial-gradient(circle, rgb(235 0 40 / 0.55), transparent 62%);
-}
-.mesh i:nth-child(2) {
-  right: -26vmax;
-  bottom: -46vmax;
-  background: radial-gradient(circle, rgb(140 0 24 / 0.65), transparent 60%);
-  animation-duration: 32s;
-  animation-delay: -8s;
-}
-.mesh i:nth-child(3) {
-  left: 22vw;
-  bottom: -58vmax;
-  background: radial-gradient(circle, rgb(255 70 90 / 0.28), transparent 60%);
-  animation-duration: 38s;
-  animation-delay: -16s;
-}
-.mesh.paused i {
-  animation-play-state: paused;
-}
-@keyframes mesh-drift {
-  to {
-    transform: translate3d(8vmax, -6vmax, 0) scale(1.15);
+@keyframes drift {
+  0% {
+    transform: translate(0, 0) rotate(0);
+  }
+  50% {
+    transform: translate(calc(var(--dx) * -0.6), var(--dy)) rotate(calc(var(--r) * 0.5));
+  }
+  100% {
+    transform: translate(var(--dx), calc(var(--dy) * -0.4)) rotate(var(--r));
   }
 }
-
-/* ---------- Lockup (co-lead's logo, kept as built) ---------- */
+.glass-cursor {
+  width: 21px;
+  height: 21px;
+  border-radius: 9999px;
+  border: 1.8px solid rgba(235, 0, 40, 0.85);
+  background: rgba(235, 0, 40, 0.22);
+  box-shadow:
+    0 0 14px rgba(235, 0, 40, 0.6),
+    inset 0 0 6px rgba(235, 0, 40, 0.4);
+  backdrop-filter: blur(2px);
+}
 .lockup {
   --h: clamp(36px, 13vw, 170px);
   gap: calc(var(--h) * 0.12);
@@ -285,25 +246,46 @@ body {
   transform: none;
   opacity: 1;
 }
-.ink circle {
-  transform: scale(0);
+.coming {
+  font-family: Archivo, Helvetica, Arial, sans-serif;
+  color: transparent;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 100 100'%3E%3Cpolygon transform='translate(22 22) scale(.56)' points='0,0 34,0 50,28 66,0 100,0 68,50 100,100 66,100 50,72 34,100 0,100 32,50' fill='%23FFC9D0'/%3E%3C/svg%3E")
+      repeat,
+    #fff;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 1.5px var(--soft-red);
+  filter: drop-shadow(0 0 18px oklch(0.74 0.15 15 / 0.45));
+  opacity: 0;
+  transform: scale(2.4);
 }
-.ink.go circle {
-  animation: inkSpread 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+.coming.show {
+  animation: zoomIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-@keyframes inkSpread {
+
+@keyframes zoomIn {
   0% {
-    transform: scale(0);
+    opacity: 0;
+    transform: scale(2.4);
   }
-  60% {
-    transform: scale(0.7);
-  }
+
   100% {
+    opacity: 1;
     transform: scale(1);
   }
 }
-
-/* ---------- Countdown digits ---------- */
+.count-card {
+  background: oklch(1 0 0 / 0.03);
+  border: 1px solid oklch(0.58 0.24 22 / 0.25);
+  backdrop-filter: blur(6px);
+}
+.count-num {
+  color: var(--ted-red);
+  text-shadow: 0 0 18px oklch(0.58 0.24 22 / 0.6);
+  font-family: Archivo, sans-serif;
+  display: flex;
+}
 .roll-in {
   animation: rollIn 0.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
@@ -326,26 +308,21 @@ body {
     transform: translateY(100%);
   }
 }
-
-/* ---------- Skip intro / reduced motion: jump to the final state ---------- */
-/* The countdown's digit roll is not part of the intro, so it keeps animating. */
-.is-skipped,
-.is-skipped *:not(.roll-in):not(.roll-out) {
-  transition-duration: 0s !important;
-  transition-delay: 0s !important;
-  animation-duration: 0s !important;
-  animation-delay: 0s !important;
+.ink circle {
+  transform: scale(0);
 }
-@media (prefers-reduced-motion: reduce) {
-  .mesh i {
-    animation: none;
+.ink.go circle {
+  animation: inkSpread 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+@keyframes inkSpread {
+  0% {
+    transform: scale(0);
   }
-  .roll-in,
-  .roll-out {
-    animation: none;
+  60% {
+    transform: scale(0.7);
   }
-  html {
-    scroll-behavior: auto;
+  100% {
+    transform: scale(1);
   }
 }
 @media (max-width: 640px) {
